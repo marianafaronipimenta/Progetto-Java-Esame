@@ -7,5 +7,4 @@ import org.junit.platform.suite.api.Suite;
 @SelectClasses({})
 public class AllTests {
 	
-	int[] test = new int[];
 }

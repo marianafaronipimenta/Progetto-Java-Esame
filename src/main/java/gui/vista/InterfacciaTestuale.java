@@ -1,4 +1,4 @@
-package view;
+package gui.vista;
 
 public class InterfacciaTestuale {
 

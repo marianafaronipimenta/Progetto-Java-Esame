@@ -7,12 +7,11 @@ import org.junit.jupiter.api.Test;
 import model.Categoria;
 
 /**
- * Test per la classe Categoria.
+ * Test per la verifica del funzionamento della classe Categoria.
  * 
  * Verifica che il contenuto del campo nome sia valido e lancia eccezioni se
- * l'utente ha inserito un contenuto nullo o una stringa vuota. Inoltre l'ultimo
- * test verifica che se sono presenti due categorie inserite col medesimo nome,
- * allora sono uguali.
+ * l'utente ha inserito un contenuto nullo o una stringa vuota. 
+ * Non possono esserci due categorie con lo stesso nome.
  * 
  * @author Gibello
  */

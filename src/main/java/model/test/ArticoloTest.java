@@ -1,14 +1,95 @@
-package test_model;
+package model.test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+import model.Articolo;
+import model.Categoria;
+
 class ArticoloTest {
 
 	@Test
-	void test() {
-		fail("Not yet implemented");
+	void testNomeEccezioneVuoto() {
+		assertThrows(IllegalArgumentException.class, () -> {
+			new Articolo("");
+		});
+	}
+	
+	@Test 
+	void testNomeEccezioneNullo() {
+		assertThrows(IllegalArgumentException.class, () -> {
+			new Articolo(null);
+		});
+	}
+	
+	@Test
+	void testPrezzoDefault() {
+		Articolo articolo = new Articolo("Latte");
+		assertEquals(0, articolo.getPrezzo());
 	}
 
+	@Test
+	void testCategoriaDefault() {
+		Articolo articolo = new Articolo("latte");
+		assertEquals(new Categoria("Non categorizato"), articolo.getCategoria());
+	}
+	
+	@Test
+	void testNotaDefault() {
+		Articolo articolo = new Articolo("Latte");
+		assertEquals("", articolo.getNota());
+	}
+	
+	@Test
+	void testSetPrezzo() {
+		Articolo articolo = new Articolo("Latte");
+		articolo.setPrezzo(1.50);
+		assertEquals(1.50, articolo.getPrezzo());
+	}
+	
+	@Test 
+	void testSetCategoria() {
+		Articolo articolo = new Articolo("Latte");
+		articolo.setCategoria(new Categoria("Senza lactose"));
+		assertEquals(new Categoria("Senza lactose"), articolo.getCategoria());
+	}
+	
+	@Test 
+	void testSetNota() {
+		Articolo articolo = new Articolo("Latte");
+		articolo.setNota("Lotto: 260611");
+	}
+	
+	@Test 
+	void testPrezzoEccezione() {
+		Articolo articolo = new Articolo("Latte");
+		assertThrows(IllegalArgumentException.class, () -> {
+			articolo.setPrezzo(-1); 
+		});
+	}
+	
+	@Test
+	void testPrefissoTrovato() {
+		Articolo articolo = new Articolo("Latte");
+		assertTrue(articolo.iniziaCon("lat"));
+	}
+	
+	@Test 
+	void testPrefissoNonTrovato() {
+		Articolo articolo = new Articolo("Latte");
+		assertFalse(articolo.iniziaCon("xyz"));
+	}
+	
+	@Test
+	void testPrefissoVuoto() {
+		Articolo articolo = new Articolo("Latte");
+		assertFalse(articolo.iniziaCon(""));
+	}
+	
+	@Test
+	void testPrefissoLower() {
+		Articolo articolo = new Articolo("Latte");
+		assertTrue(articolo.iniziaCon("LaT"));
+	}
 }

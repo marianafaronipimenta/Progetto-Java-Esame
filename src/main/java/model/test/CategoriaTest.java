@@ -19,7 +19,7 @@ import model.Categoria;
 class CategoriaTest {
 
 	@Test
-	void testValidInsertion() {
+	void testInserimentoValido() {
 
 		Categoria n = new Categoria("Spesa alimentare");
 
@@ -28,14 +28,14 @@ class CategoriaTest {
 	}
 
 	@Test
-	void testNullNameThrowsException() {
+	void testNomeNulloLanciaEccezione() {
 
 		assertThrows(IllegalArgumentException.class, () -> new Categoria(null));
 
 	}
 
 	@Test
-	void testEmptyNameThrowsException() {
+	void testNomeVuotoLanciaEccezione() {
 
 		assertThrows(IllegalArgumentException.class, () -> new Categoria(""));
 

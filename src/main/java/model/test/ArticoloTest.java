@@ -32,7 +32,7 @@ class ArticoloTest {
 	@Test
 	void testCategoriaDefault() {
 		Articolo articolo = new Articolo("latte");
-		assertEquals(new Categoria("Non categorizato"), articolo.getCategoria());
+		assertEquals(new Categoria("Non categorizzato"), articolo.getCategoria());
 	}
 	
 	@Test
@@ -51,8 +51,8 @@ class ArticoloTest {
 	@Test 
 	void testSetCategoria() {
 		Articolo articolo = new Articolo("Latte");
-		articolo.setCategoria(new Categoria("Senza lactose"));
-		assertEquals(new Categoria("Senza lactose"), articolo.getCategoria());
+		articolo.setCategoria(new Categoria("Senza lattosio"));
+		assertEquals(new Categoria("Senza lattosio"), articolo.getCategoria());
 	}
 	
 	@Test 
@@ -62,12 +62,21 @@ class ArticoloTest {
 	}
 	
 	@Test 
-	void testPrezzoEccezione() {
+	void testPrezzoEccezioneNegativo() {
 		Articolo articolo = new Articolo("Latte");
 		assertThrows(IllegalArgumentException.class, () -> {
-			articolo.setPrezzo(-1); 
+			articolo.setPrezzo(-1.0); 
 		});
 	}
+	
+	@Test 
+	void testPrezzoEccezioneZero() {
+		Articolo articolo = new Articolo("Latte");
+		assertThrows(IllegalArgumentException.class, () -> {
+			articolo.setPrezzo(0.0); 
+		});
+	}
+	
 	
 	@Test
 	void testPrefissoTrovato() {

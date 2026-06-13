@@ -1,9 +1,9 @@
 package model;
 
-import model.Categoria;
+import java.util.Objects;
 
 /**
- * Questa classe rappresenta un articolo che può essere inserito in una lista
+ * Classe che rappresenta un articolo che può essere inserito in una lista
  * della spesa. Ogni articolo ha un nome obbligatorio, una categoria, una nota e
  * un prezzo.
  * 
@@ -98,7 +98,7 @@ public class Articolo {
 	 * @param prezzo Il nuovo prezzo che non può essere negativo.
 	 */
 	public void setPrezzo(double prezzo) {
-		if (prezzo <= 0) {
+		if (prezzo < 0) {
 			throw new IllegalArgumentException("Il prezzo non può essere nullo o negativo");
 		}
 		this.prezzo = prezzo;
@@ -134,5 +134,23 @@ public class Articolo {
 	@Override
 	public String toString() {
 		return nome + "|" + categoria + "| €" + prezzo + "|" + nota;
+	}
+	
+	/**
+	 * Confronta la categoria inserita con un altro oggetto.
+	 * Se due categorie hanno lo stesso nome, allora sono uguali.
+	 * 
+	 * @return true se gli oggetti sono uguali, altrimenti false.
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Articolo other = (Articolo) obj;
+		return Objects.equals(nome, other.nome);
 	}
 }

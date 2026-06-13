@@ -45,7 +45,7 @@ class ArticoloTest {
 	void testSetPrezzo() {
 		Articolo articolo = new Articolo("Latte");
 		articolo.setPrezzo(1.50);
-		assertEquals(1.50, articolo.getPrezzo());
+		assertEquals(1.50, articolo.getPrezzo(),  0.001);
 	}
 	
 	@Test 
@@ -59,6 +59,7 @@ class ArticoloTest {
 	void testSetNota() {
 		Articolo articolo = new Articolo("Latte");
 		articolo.setNota("Lotto: 260611");
+		assertEquals("Lotto: 260611", articolo.getNota());
 	}
 	
 	@Test 
@@ -66,14 +67,6 @@ class ArticoloTest {
 		Articolo articolo = new Articolo("Latte");
 		assertThrows(IllegalArgumentException.class, () -> {
 			articolo.setPrezzo(-1.0); 
-		});
-	}
-	
-	@Test 
-	void testPrezzoEccezioneZero() {
-		Articolo articolo = new Articolo("Latte");
-		assertThrows(IllegalArgumentException.class, () -> {
-			articolo.setPrezzo(0.0); 
 		});
 	}
 	
@@ -100,5 +93,14 @@ class ArticoloTest {
 	void testPrefissoLower() {
 		Articolo articolo = new Articolo("Latte");
 		assertTrue(articolo.iniziaCon("LaT"));
+	}
+	
+	@Test
+	void testArticoliUguali() {
+
+		Articolo n1 = new Articolo("Latte");
+		Articolo n2 = new Articolo("Latte");
+
+		assertTrue(n1.equals(n2));
 	}
 }

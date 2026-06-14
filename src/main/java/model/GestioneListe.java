@@ -1,9 +1,9 @@
 package model;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -14,8 +14,8 @@ import java.util.Map;
  * @author Faroni Pimenta
  */
 public class GestioneListe {
-	private static List<Categoria> categorie = new ArrayList<>();
-	private static List<Articolo> articoli = new ArrayList<>();
+	private static Set<Categoria> categorie = new HashSet<>();
+	private static Set<Articolo> articoli = new HashSet<>();
 	private static Map<String, ListaDiArticoli> listeArticoli = new HashMap<>();
 
 	/**
@@ -38,12 +38,20 @@ public class GestioneListe {
 		return listeArticoli.get(nome);
 	}
 
-	/***/
+	/**
+	 * Rimuove tutte le liste di articoli
+	 */
 	public static void svuotaListe() {
 		listeArticoli.clear();
 	}
 
-	/***/
+	/**
+	 * Cancella la lista di articoli con il nome specificato.
+     *
+     * @param nome il nome della lista da cancellare
+     * @return true se la lista è stata cancellata con successo
+     * @exception IllegalArgumentException se la lista non esiste
+     */
 	public static boolean cancellaLista(String nome) {
 		if (!listeArticoli.containsKey(nome)) {
 			throw new IllegalArgumentException("Lista non trovata: " + nome);
@@ -53,22 +61,32 @@ public class GestioneListe {
 		return true;
 	}
 	
-	/***/
+	/**
+	 *  Rimuove tutte le categorie
+	 */
 	public static void svuotaCategorie() {
 		categorie.clear();
 	}
 
-	/***/
+	/**
+	 *  Aggiunge una nuova categoria con il nome specificato.
+     *
+     * @param nome il nome della categoria da aggiungere
+     * @exception IllegalArgumentException se la categoria esiste già
+     */
 	public static void aggiungeCategoria(String nome) {
-		for (Categoria c : categorie) {
-			if (c.getNome().equals(nome)) {
-				throw new IllegalArgumentException("Categoria gia' esistente: " + nome);
-			}
+		boolean aggiunto = categorie.add(new Categoria(nome));
+		if (!aggiunto) {
+			throw new IllegalArgumentException("Categoria gia' esistente: " + nome);
 		}
-		categorie.add(new Categoria(nome));
 	}
 
-	/***/
+	/**
+	 *  Restituisce la categoria con il nome specificato.
+     *
+     * @param nome il nome della categoria da cercare
+     * @return la categoria corrispondente al nome, o null se non esiste
+     */
 	public static Categoria getCategorie(String nome) {
 		for(Categoria c : categorie) {
 			if(c.getNome().equals(nome)) {
@@ -86,20 +104,18 @@ public class GestioneListe {
      * @exception IllegalArgumentException se la categoria non esiste
      */
 	public static boolean cancellaCategoria(String nome) {
-		for (Categoria c : categorie)
+		boolean rimosso = categorie.remove(new Categoria(nome));
+		if(!rimosso)
 		{
-			if(c.getNome().equals(nome))
-			{
-				categorie.remove(c);
-				return true;
-			}
+			throw new IllegalArgumentException("Categoria non trovata: " + nome);
 		}
-		throw new IllegalArgumentException("Categoria non trovata: " + nome);
+		
+		return true;
 	}
 
 	
 	/**
-	 *  Rimuove tutti gli articoli.
+	 *  Rimuove tutti gli articoli
      */
 	public static void svuotaArticoli() {
 		articoli.clear();
@@ -112,14 +128,10 @@ public class GestioneListe {
      * @exception IllegalArgumentException se l'articolo esiste già
      */
 	public static void aggiungeArticolo(String nome) {
-		for(Articolo a : articoli)
-		{
-			if(a.getNome().equals(nome))
-			{
-				throw new IllegalArgumentException("Articolo gia' esistente: " + nome);
-			}
+		boolean aggiunto = articoli.add(new Articolo(nome));
+		if (!aggiunto) {
+			throw new IllegalArgumentException("Articolo gia' esistente: " + nome);
 		}
-		articoli.add(new Articolo(nome));
 	}
 
 	/**
@@ -148,16 +160,13 @@ public class GestioneListe {
      * @exception IllegalArgumentException se l'articolo non esiste
      */
 	public static boolean cancellaArticolo(String nome) {
-		for(Articolo a : articoli)
+		boolean rimosso = articoli.remove(new Articolo(nome));
+		if(!rimosso)
 		{
-			if(a.getNome().equals(nome))
-			{
-				articoli.remove(a);
-				return true;
-			}
+			throw new IllegalArgumentException("Articolo non trovato: " + nome);
 		}
 		
-		throw new IllegalArgumentException("Articolo non trovato: " + nome);
+		return true;
 	}
 
 }

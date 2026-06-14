@@ -1,15 +1,20 @@
 package model.test;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import model.GestioneListe;
-import model.ListaDiArticoli;
 
-class GestioneListeTest<ListeArticoli> {
+/**
+ * Classe di test per la classe GestioneListe.
+ * Verifica il corretto funzionamento delle operazioni su liste, categorie e articoli.
+ * 
+ * @author Faroni Pimenta
+ */
+
+class GestioneListeTest {
 	@BeforeEach
 	void setup() {
 		GestioneListe.svuotaListe();

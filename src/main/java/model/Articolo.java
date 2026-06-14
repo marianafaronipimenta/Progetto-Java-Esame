@@ -136,6 +136,11 @@ public class Articolo {
 		return nome + "|" + categoria + "| €" + prezzo + "|" + nota;
 	}
 	
+	@Override
+	public int hashCode() {
+		return Objects.hash(nome);
+	}
+	
 	/**
 	 * Confronta la categoria inserita con un altro oggetto.
 	 * Se due categorie hanno lo stesso nome, allora sono uguali.

@@ -7,6 +7,13 @@ import org.junit.jupiter.api.Test;
 import model.Articolo;
 import model.Categoria;
 
+
+/**
+ * Classe di test per la classe Articolo.
+ * Verifica il corretto funzionamento del costruttore, dei setter e dei metodi di ricerca.
+ * 
+ * @author Faroni Pimenta
+ */
 class ArticoloTest {
 
 	@Test

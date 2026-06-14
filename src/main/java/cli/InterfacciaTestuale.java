@@ -1,4 +1,4 @@
-package gui.vista;
+package cli;
 
 public class InterfacciaTestuale {
 

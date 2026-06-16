@@ -24,6 +24,10 @@ public class GestioneListe {
      * @param nome il nome della lista da creare
      */
 	public static void creaLista(String nome) {
+		if(listeArticoli.containsKey(nome))
+		{
+			throw new IllegalArgumentException("Lista gia' esistente: " + nome);
+		}
 		listeArticoli.put(nome, new ListaDiArticoli(nome));
 
 	}

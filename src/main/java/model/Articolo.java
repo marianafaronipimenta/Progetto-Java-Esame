@@ -133,7 +133,7 @@ public class Articolo {
 	 */
 	@Override
 	public String toString() {
-		return nome + "|" + categoria + "| €" + prezzo + "|" + nota;
+		return nome + " | " + categoria.getNome() + " | €" + prezzo + " |" + nota;
 	}
 	
 	@Override

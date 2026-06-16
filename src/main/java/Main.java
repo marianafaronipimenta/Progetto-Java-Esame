@@ -6,12 +6,9 @@ public class Main {
 
 	public static void main(String[] args) {
 		Controller controller = new Controller();
-		interfacciaGrafica(controller);
+		ListaGui gui = new ListaGui(controller);
+		controller.setView(gui);
 		interfacciaTestuale(controller);
-	}
-
-	private static void interfacciaGrafica(Controller controller) {
-		new ListaGui(controller);
 	}
 	
 	private static void interfacciaTestuale(Controller controller) {

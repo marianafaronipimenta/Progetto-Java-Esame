@@ -21,6 +21,14 @@ public class OpsPanel extends JPanel{
 		JButton aggiungiCategoria = new JButton("Aggiungi categoria");
 		JButton cancellaCategoria = new JButton("Cancella categoria");
 	
+		creaLista.setActionCommand("CREA_LISTA");
+		cancellaLista.setActionCommand("CANCELLA_LISTA");
+		aggiungiArticolo.setActionCommand("AGGIUNGI_ARTICOLO");
+		cancellaArticolo.setActionCommand("CANCELLA_ARTICOLO");
+		aggiungiCategoria.setActionCommand("AGGIUNGI_CATEGORIA");
+		cancellaCategoria.setActionCommand("CANCELLA_CATEGORIA");
+		
+		
 		creaLista.addActionListener(controller);
 		cancellaLista.addActionListener(controller);
 		aggiungiArticolo.addActionListener(controller);

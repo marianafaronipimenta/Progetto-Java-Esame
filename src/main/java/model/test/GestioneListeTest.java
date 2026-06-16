@@ -15,6 +15,11 @@ import model.GestioneListe;
  */
 
 class GestioneListeTest {
+	
+	/**
+	 * Pulisce tutte le liste, categorie e articoli prima di ogni test.
+	 * 
+	 * */
 	@BeforeEach
 	void setup() {
 		GestioneListe.svuotaListe();
@@ -22,18 +27,31 @@ class GestioneListeTest {
 		GestioneListe.svuotaArticoli();
 	}
 
+	/**
+	 * Verifica che una lista creata non sia nulla.
+	 * 
+	 * */
 	@Test
 	void testCreazioneListe() {
 		GestioneListe.creaLista("Ikea");
 		assertNotNull(GestioneListe.getLista("Ikea"));
 	}
 
+	/**
+	 * Verifica che una lista esistente venga cancellata correttamente.
+	 * 
+	 * */
 	@Test
 	void testCancellaListe() {
 		GestioneListe.creaLista("Ikea");
 		assertTrue(GestioneListe.cancellaLista("Ikea"));
 	}
 
+	/**
+	 * Verifica che venga lanciata un'eccezione quando si tenta
+     * di cancellare una lista che non esiste.
+     * 
+     * */
 	@Test
 	void testEccezioneListaNonTrovata() {
 		GestioneListe.creaLista("Ikea");
@@ -42,13 +60,21 @@ class GestioneListeTest {
 		});
 	}
 	
-	
+	/**
+	 * Verifica che una categoria venga aggiunta correttamente.
+	 * 
+	 * */
 	@Test
 	void testAggiungeCategoria() {
 		GestioneListe.aggiungeCategoria("Mobili");
 		assertEquals("Mobili", GestioneListe.getCategorie("Mobili").getNome());
 	}
 	
+	/**
+	 * Verifica che venga lanciata un'eccezione quando si tenta
+     * di aggiungere una categoria già esistente.
+     * 
+     * */
 	@Test
 	void testEccezioneCategoriaEsistente() {
 		GestioneListe.aggiungeCategoria("Mobili");
@@ -57,13 +83,19 @@ class GestioneListeTest {
 		});
 	}
 	
-	
+	/**
+	 * Verifica che una categoria esistente venga cancellata correttamente.
+	 * 
+	 * */
 	@Test
 	void testCancellaCategoria() {
 		GestioneListe.aggiungeCategoria("Mobili");
 		assertTrue(GestioneListe.cancellaCategoria("Mobili"));
 	}
 	
+	/**
+	 *  Verifica che venga lanciata un'eccezione quando si tenta
+     * di cancellare una categoria che non esiste.*/
 	@Test
 	void testEccezioneCategoriaNonTrovata() {
 		GestioneListe.aggiungeCategoria("Mobili");
@@ -72,12 +104,20 @@ class GestioneListeTest {
 		});
 	}
 	
+	/**
+	 * Verifica che un articolo venga aggiunto correttamente.
+	 * */
 	@Test
 	void testAggiungeArticolo() {
 		GestioneListe.aggiungeArticolo("Tavolo");
 		assertEquals("Tavolo", GestioneListe.getArticolo("Tavolo").getNome());
 	}
 	
+	/**
+	 * Verifica che venga lanciata un'eccezione quando si tenta
+     * di aggiungere un articolo già esistente.
+     * 
+     * */
 	@Test
 	void testEccezioneArticoloEsistente() {
 		GestioneListe.aggiungeArticolo("Tavolo");
@@ -86,12 +126,21 @@ class GestioneListeTest {
 		});
 	}
 	
+	/**
+	 * Verifica che un articolo esistente venga cancellato correttamente.
+	 * 
+	 * */
 	@Test
 	void testCancellaArticolo() {
 		GestioneListe.aggiungeArticolo("Tavolo");
 		assertTrue(GestioneListe.cancellaArticolo("Tavolo"));
 	}
 	
+	/**
+	 * Verifica che venga lanciata un'eccezione quando si tenta
+     * di cancellare un articolo che non esiste.
+     * 
+     * */
 	@Test 
 	void testEccezioneArticoloNonTrovato() {
 		GestioneListe.aggiungeArticolo("Tavolo");

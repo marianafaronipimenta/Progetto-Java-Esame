@@ -8,11 +8,20 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
+/**
+ * Pannello che visualizza il contenuto della lista di articoli selezionata.
+ * Mostra gli articoli attivi, quelli cancellati e il prezzo totale.
+ * 
+ * @author Faroni Pimenta*/
 @SuppressWarnings("serial")
 public class ContentPanel extends JPanel{
 	
 	private JTextArea contenuto;
 
+	/**
+	 * Costruttore che inizializza il pannello del contenuto.
+     * Crea l'area di testo non modificabile e la label del titolo.
+	 * */
 	public ContentPanel() {
 		setLayout(new BorderLayout());
 
@@ -26,6 +35,11 @@ public class ContentPanel extends JPanel{
         add(contenuto, BorderLayout.CENTER);
     }
 
+	/**
+	 * Aggiorna il testo visualizzato nell'area di contenuto.
+     *
+     * @param testo    Il testo formattato da visualizzare.
+     * */
     public void updateView(String testo) {
         contenuto.setText(testo);
     }

@@ -490,7 +490,7 @@ public class Controller implements ActionListener {
 			
 			model.Articolo nuovoArticolo = new model.Articolo(nomeArticolo, categoria, nota, prezzo);
 			
-			model.GestioneListe.inserisciArticoloInCatalogo(nuovoArticolo);
+			model.GestioneListe.aggiungeArticolo(nuovoArticolo);
 			
 			if (this.listaAttuale != null) {
 				

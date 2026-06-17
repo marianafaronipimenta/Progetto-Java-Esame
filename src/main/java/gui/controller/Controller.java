@@ -7,6 +7,7 @@ import javax.swing.JOptionPane;
 import model.GestioneListe;
 import model.ListaDiArticoli;
 import model.Articolo;
+import model.Categoria;
 
 /**
  * Controller dell'architettura MVC. Il controller serve a gestire il flusso tra
@@ -18,181 +19,233 @@ import model.Articolo;
  */
 
 public class Controller implements ActionListener {
-	
+
 	private gui.ListaGui view;
-	
-	
+
+	private String listaAttuale = null;
+
 	/**
 	 * Associa la vista Swing principale al controller.
 	 * 
 	 * @param view Il frame principale della GUI.
 	 */
 	public void setView(gui.ListaGui view) {
-		
+
 		this.view = view;
 	}
 
 	/**
 	 * Intercetta i clic sui pulsanti della GUI (OpsPanel) e smista le operazioni.
 	 */
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
+
 		String comando = e.getActionCommand();
-		
+
 		if ("CREA_LISTA".equals(comando)) {
-			
+
 			String nome = JOptionPane.showInputDialog(view, "Inserisci il nome della nuova lista:");
-			
-			if (nome != null && gestisciCreazioneLista(nome)) {
-				
+
+			if (nome != null && !nome.trim().isEmpty()) {
+
+				if (gestisciCreazioneLista(nome)) {
+
 					JOptionPane.showMessageDialog(view, "Lista creata con successo!");
-					
-					aggiornaInterfacciaGrafica(nome);
-				
-				} else if (nome != null){
-					
-					JOptionPane.showMessageDialog(view, "Errore: lista duplicata o non valida.", "Errore", JOptionPane.ERROR_MESSAGE);
+
+					aggiornaInterfacciaGrafica(listaAttuale);
+
+				} else {
+
+					JOptionPane.showMessageDialog(view, "Errore: lista già esistente.", "Errore",
+							JOptionPane.ERROR_MESSAGE);
 				}
 			}
-			
-			else if ("CANCELLA_LISTA".equals(comando)) {
-			
-				String nome = JOptionPane.showInputDialog(view, "Inserisci il nome della lista da cancellare:");
-			
-				if (nome != null && gestisciCancellazioneLista(nome)) {
-				
+
+		}
+
+		else if ("CANCELLA_LISTA".equals(comando)) {
+
+			String nome = JOptionPane.showInputDialog(view, "Inserisci il nome della lista da cancellare:");
+
+			if (nome != null) {
+
+				if (gestisciCancellazioneLista(nome)) {
+
 					JOptionPane.showMessageDialog(view, "Lista rimossa.");
-					
-					aggiornaInterfacciaGrafica(null);
-				
-				} else if (nome != null) {
-				
-					JOptionPane.showMessageDialog(view, "Errore: Lista non trovata.", "Errore", JOptionPane.ERROR_MESSAGE);
+
 				}
+
+				if (nome.equals(listaAttuale)) {
+
+					this.listaAttuale = null;
+				}
+
+				aggiornaInterfacciaGrafica(listaAttuale);
+
+			} else {
+
+				JOptionPane.showMessageDialog(view, "Errore: Lista non trovata.", "Errore", JOptionPane.ERROR_MESSAGE);
 			}
-		
-			else if ("AGGIUNGI_CATEGORIA".equals(comando)) {
-			
-				String nome = JOptionPane.showInputDialog(view, "Inserisci il nome della nuova categoria:");
-					
-				if (nome != null && gestisciAggiuntaCategoria(nome)) {
-		
+		}
+
+		else if ("AGGIUNGI_CATEGORIA".equals(comando)) {
+
+			String nome = JOptionPane.showInputDialog(view, "Inserisci il nome della nuova categoria:");
+
+			if (nome != null) {
+
+				if (gestisciAggiuntaCategoria(nome)) {
+
 					JOptionPane.showMessageDialog(view, "Categoria aggiunta!.");
-					
-				} else if (nome != null) {
-					
-					JOptionPane.showMessageDialog(view, "Errore: categoria già esistente o vuota.", "Errore", JOptionPane.ERROR_MESSAGE);
+
+					aggiornaInterfacciaGrafica(listaAttuale);
+
+				} else {
+
+					JOptionPane.showMessageDialog(view, "Errore: categoria già esistente o vuota.", "Errore",
+							JOptionPane.ERROR_MESSAGE);
 				}
-				
 			}
-		
-			else if ("CANCELLA_CATEGORIA".equals(comando)) {
-				
-				String nome = JOptionPane.showInputDialog(view, "Inserisci il nome della categoria da cancellare:");
-			
-				if (nome != null && gestisciCancellazioneCategoria(nome)) {
-				
+		}
+
+		else if ("CANCELLA_CATEGORIA".equals(comando)) {
+
+			String nome = JOptionPane.showInputDialog(view, "Inserisci il nome della categoria da cancellare: ");
+
+			if (nome != null) {
+
+				if (gestisciCancellazioneCategoria(nome)) {
+
 					JOptionPane.showMessageDialog(view, "Categoria rimossa!");
-				
-				} else if (nome != null) {
-				
-					JOptionPane.showMessageDialog(view, "Errore: Categoria non trovata.", "Errore", JOptionPane.ERROR_MESSAGE);
+
+				} else {
+
+					JOptionPane.showMessageDialog(view, "Errore: Categoria non trovata.", "Errore",
+							JOptionPane.ERROR_MESSAGE);
 				}
 			}
-		
-			else if ("AGGIUNGI_ARTICOLO".equals(comando)) {
-			
-				String nome = JOptionPane.showInputDialog(view, "Inserisci il nome del nuovo articolo:");
-					
-				if (nome != null && gestisciAggiuntaArticoloCatalogo(nome)) {
-		
-					JOptionPane.showMessageDialog(view, "Articolo aggiunto nel catalogo!.");
-					
-				} else if (nome != null) {
-					
-					JOptionPane.showMessageDialog(view, "Errore: Articolo già esistente o vuoto.", "Errore", JOptionPane.ERROR_MESSAGE);
-				}
-				
+		}
+
+		else if ("AGGIUNGI_ARTICOLO".equals(comando)) {
+
+			if (listaAttuale == null) {
+
+				JOptionPane.showMessageDialog(view, "Seleziona o crea prima una lista.", "Avviso",
+						JOptionPane.WARNING_MESSAGE);
+
+				return;
+
 			}
-		
-			else if ("CANCELLA_ARTICOLO".equals(comando)) {
-				
-				String nome = JOptionPane.showInputDialog(view, "Inserisci il nome dell'articolo da cancellare:");
-			
-				if (nome != null) {
-					
-					try {
-				
-						model.GestioneListe.cancellaArticolo(nome);
-						
-						JOptionPane.showMessageDialog(view, "Articolo rimosso.");
-					
-					} catch (IllegalArgumentException ex) {
-				
-						JOptionPane.showMessageDialog(view, "Errore: Articolo non trovato.", "Errore", JOptionPane.ERROR_MESSAGE);
-					}
-					
+
+		}
+
+		else if ("CANCELLA_ARTICOLO".equals(comando)) {
+
+			if (listaAttuale == null) {
+
+				JOptionPane.showMessageDialog(view, "Seleziona prima una lista!", "Avviso",
+						JOptionPane.WARNING_MESSAGE);
+
+				return;
+
+			}
+
+			String nomeArt = JOptionPane.showInputDialog(view, "Nome dell'articolo da rimuovere da questa lista: ");
+
+			if (nomeArt != null) {
+
+				Articolo art = GestioneListe.getArticolo(nomeArt);
+
+				if (gestisciRimozioneArticoloDallaLista(listaAttuale, art)) {
+
+					JOptionPane.showMessageDialog(view, "Articolo spostato nei cancellati.");
+
+					aggiornaInterfacciaGrafica(listaAttuale);
+
+				} else {
+
+					JOptionPane.showMessageDialog(view, "Errore: Articolo non trovato.", "Errore",
+							JOptionPane.ERROR_MESSAGE);
+
 				}
-				
-			}	
-		
+
+			}
+
+		}
+
+	}
+
+	private void aggiornaInterfacciaGrafica(String nomeListaAttuale) {
+
+		if (view != null) {
+
+			String testo = ottieniTestoFormattatoLista(nomeListaAttuale);
+
+			view.aggiornaContenuto(testo);
+		}
 	}
 
 	/**
-	 * Converte il contenuto di una lista in testo formattato pronto per il ContentPanel,
-	 * rispettando l'incapsulamento del pattern MVC (La View legge solo stringhe).
+	 * Converte il contenuto di una lista in testo formattato pronto per il
+	 * ContentPanel, rispettando l'incapsulamento del pattern MVC.
 	 * 
 	 * @param nomeLista Il nome della lista da formattare.
 	 * @return Una stringa contenente l'elenco degli articoli attivi e cancellati.
 	 */
-	
+
 	public String ottieniTestoFormattatoLista(String nomeLista) {
-		
+
+		if (nomeLista == null) {
+
+			return "Nessuna lista selezionata. Crea o seleziona una lista dai pulsanti in alto.";
+		}
+
 		ListaDiArticoli lista = GestioneListe.getLista(nomeLista);
-		
+
 		if (lista == null) {
-		
-			return "Nessuna lista selezionata.";
+
+			return "Lista non trovata!";
 		}
 
 		StringBuilder sb = new StringBuilder();
-		
-		sb.append("=== ").append(lista.getNome().toUpperCase()).append(" ===\n\n");
-		
+
+		sb.append("=== 	LISTA SELEZIONATA: ").append(lista.getNome().toUpperCase()).append(" ===\n\n");
+
 		sb.append("ARTICOLI DA COMPRARE:\n");
-		
-	
+
 		for (Articolo a : lista.getArticoliDaComprare()) {
-			
+
 			sb.append("- ").append(a.toString()).append("\n");
 		}
 
 		sb.append("\nARTICOLI CANCELLATI:\n");
-		
+
 		for (Articolo a : lista.getArticoliCancellati()) {
-			
-			sb.append("[Cancellato] ").append(a.getNome()).append("\n");
+
+			sb.append("[Cancellato] ").append(a.getNome()).append(" (Categoria: ").append(a.getCategoria().getNome())
+					.append(")\n");
 		}
 
 		sb.append("\n-----------------------------------\n");
-		
-		sb.append("PREZZO TOTALE: € ").append(String.format("%.2f", lista.calcolaPrezzoTotale()));
+
+		sb.append("PREZZO TOTALE ATTIVI: € ").append(String.format("%.2f", lista.calcolaPrezzoTotale()));
 
 		return sb.toString();
 	}
 
-	private void aggiornaInterfacciaGrafica(String nomeListaAttuale) {
-		
-		if (view != null && view.getContentPanel() != null) {
-			
-			String testo = ottieniTestoFormattatoLista(nomeListaAttuale);
-			
-			view.getContentPanel().updateView(testo);
-		}
+	/**
+	 * 
+	 * Restituisce il nome della lista aperta attualmente nella GUI.
+	 * 
+	 * @return il nome della lista attuale.
+	 * 
+	 */
+
+	public String getListaAttuale() {
+
+		return listaAttuale;
 	}
-	
 
 	/**
 	 * Creazione di una nuova lista nel sistema.
@@ -404,6 +457,63 @@ public class Controller implements ActionListener {
 	}
 
 	/**
+	 * Crea un articolo completo e lo inserisce in una lista specifica. Se la
+	 * categoria inserita non esiste ancora nel catalogo globale,viene creata prima
+	 * di associare l`articolo.
+	 * 
+	 * @param nomeArticolo Il nome dell'articolo.
+	 * @param nomeCategoria Il nome della categoria (se non esiste, viene creata).
+	 * @param nota La nota opzionale.
+	 * @param prezzo il costo dell'articolo.
+	 * 
+	 * @return true se l'operazione ha successo, false altrimenti.
+	 * 
+	 */
+
+	public boolean gestisciInserimentoArticoloCompleto(String nomeArticolo, String nomeCategoria, String nota, double prezzo) {
+	
+		try {
+		
+			model.Categoria categoria = model.GestioneListe.getCategorie(nomeCategoria);
+			
+			if (categoria == null && nomeCategoria != null && nomeCategoria.trim().isEmpty()) {
+				
+				model.GestioneListe.aggiungeCategoria(nomeCategoria);
+				
+				categoria = model.GestioneListe.getCategorie(nomeCategoria);
+				
+				
+			} else if (nomeCategoria == null || nomeCategoria.trim().isEmpty()) {
+				
+				categoria = new model.Categoria("Non categorizzato");
+			}
+			
+			model.Articolo nuovoArticolo = new model.Articolo(nomeArticolo, categoria, nota, prezzo);
+			
+			model.GestioneListe.inserisciArticoloInCatalogo(nuovoArticolo);
+			
+			if (this.listaAttuale != null) {
+				
+				boolean inserito = gestisciAggiuntaArticoloLista(this.listaAttuale, nuovoArticolo);
+				
+				if (inserito) {
+					
+					aggiornaInterfacciaGrafica(listaAttuale);
+					
+					return true;
+					
+				}
+			}
+			
+			return false;
+			
+		} catch (IllegalArgumentException e) {
+			
+			return false;
+		}
+	}		
+	
+	/**
 	 * 
 	 * Calcolo del costo totale degli articoli in una lista.
 	 * 
@@ -484,4 +594,3 @@ public class Controller implements ActionListener {
 	}
 
 }
-

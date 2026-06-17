@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+
+
 /**
  * Classe che gestisce le liste di articoli, le categorie e gli articoli.
  * Contiene campi statici per mantenere le liste, le categorie e gli articoli
@@ -194,5 +196,15 @@ public class GestioneListe {
 		}
 
 		return true;
+	}
+	
+	/**
+	 * Restituisce tutte le liste di articoli presenti nel sistema.
+	 *
+	 * @return una collezione con tutte le liste di articoli.
+	 * 
+	 */
+	public static java.util.Collection<ListaDiArticoli> getTutteLeListe() {
+		return listeArticoli.values();
 	}
 }

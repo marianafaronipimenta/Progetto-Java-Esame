@@ -461,58 +461,72 @@ public class Controller implements ActionListener {
 	 * categoria inserita non esiste ancora nel catalogo globale,viene creata prima
 	 * di associare l`articolo.
 	 * 
-	 * @param nomeArticolo Il nome dell'articolo.
+	 * @param nomeArticolo  Il nome dell'articolo.
 	 * @param nomeCategoria Il nome della categoria (se non esiste, viene creata).
-	 * @param nota La nota opzionale.
-	 * @param prezzo il costo dell'articolo.
+	 * @param nota          La nota opzionale.
+	 * @param prezzo        il costo dell'articolo.
 	 * 
 	 * @return true se l'operazione ha successo, false altrimenti.
 	 * 
 	 */
 
-	public boolean gestisciInserimentoArticoloCompleto(String nomeArticolo, String nomeCategoria, String nota, double prezzo) {
-	
+	public boolean gestisciInserimentoArticoloCompleto(String nomeArticolo, String nomeCategoria, String nota,
+			double prezzo) {
+
 		try {
-		
+
 			model.Categoria categoria = model.GestioneListe.getCategorie(nomeCategoria);
-			
-			if (categoria == null && nomeCategoria != null && nomeCategoria.trim().isEmpty()) {
-				
+
+			if (categoria == null && nomeCategoria != null && !nomeCategoria.trim().isEmpty()) {
+
 				model.GestioneListe.aggiungeCategoria(nomeCategoria);
-				
+
 				categoria = model.GestioneListe.getCategorie(nomeCategoria);
-				
-				
+
 			} else if (nomeCategoria == null || nomeCategoria.trim().isEmpty()) {
-				
+
 				categoria = new model.Categoria("Non categorizzato");
 			}
-			
-			model.Articolo nuovoArticolo = new model.Articolo(nomeArticolo, categoria, nota, prezzo);
-			
-			model.GestioneListe.aggiungeArticolo(nuovoArticolo);
-			
-			if (this.listaAttuale != null) {
-				
-				boolean inserito = gestisciAggiuntaArticoloLista(this.listaAttuale, nuovoArticolo);
-				
-				if (inserito) {
-					
-					aggiornaInterfacciaGrafica(listaAttuale);
-					
-					return true;
-					
+
+			boolean aggiuntoInCatalogo = gestisciAggiuntaArticoloCatalogo(nomeArticolo);
+
+			if (aggiuntoInCatalogo) {
+
+				Articolo nuovoArticolo = GestioneListe.getArticolo(nomeArticolo);
+
+				if (nuovoArticolo != null) {
+
+					nuovoArticolo.setCategoria(categoria);
+
+					nuovoArticolo.setNota(nota);
+
+					nuovoArticolo.setPrezzo(prezzo);
+
+					if (this.listaAttuale != null) {
+
+						boolean inseritoInLista = gestisciAggiuntaArticoloLista(this.listaAttuale, nuovoArticolo);
+
+						if (inseritoInLista) {
+
+							aggiornaInterfacciaGrafica(listaAttuale);
+
+							return true;
+						}
+					}
 				}
-			}
-			
+
+			}	 
+		
 			return false;
-			
+
 		} catch (IllegalArgumentException e) {
-			
+
 			return false;
+
 		}
-	}		
-	
+
+	}
+
 	/**
 	 * 
 	 * Calcolo del costo totale degli articoli in una lista.

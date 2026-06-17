@@ -142,38 +142,25 @@ public class Controller implements ActionListener {
 
 		else if ("CANCELLA_ARTICOLO".equals(comando)) {
 
-			if (listaAttuale == null) {
+			String nome = JOptionPane.showInputDialog(view,
+					"Inserisci il nome dell'articolo da rimuovere dal catalogo globale:");
 
-				JOptionPane.showMessageDialog(view, "Seleziona prima una lista!", "Avviso",
-						JOptionPane.WARNING_MESSAGE);
+			if (nome != null && !nome.trim().isEmpty()) {
 
-				return;
+				if (gestisciCancellazioneArticoloDalCatalogo(nome)) {
 
-			}
-
-			String nomeArt = JOptionPane.showInputDialog(view, "Nome dell'articolo da rimuovere da questa lista: ");
-
-			if (nomeArt != null) {
-
-				Articolo art = GestioneListe.getArticolo(nomeArt);
-
-				if (gestisciRimozioneArticoloDallaLista(listaAttuale, art)) {
-
-					JOptionPane.showMessageDialog(view, "Articolo spostato nei cancellati.");
+					JOptionPane.showMessageDialog(view,
+							"Articolo rimosso con successo dal catalogo e da tutte le liste.");
 
 					aggiornaInterfacciaGrafica(listaAttuale);
 
 				} else {
 
-					JOptionPane.showMessageDialog(view, "Errore: Articolo non trovato.", "Errore",
+					JOptionPane.showMessageDialog(view, "Errore: Articolo non trovato nel catalogo globale.", "Errore",
 							JOptionPane.ERROR_MESSAGE);
-
 				}
-
 			}
-
 		}
-
 	}
 
 	private void aggiornaInterfacciaGrafica(String nomeListaAttuale) {
@@ -515,14 +502,64 @@ public class Controller implements ActionListener {
 					}
 				}
 
-			}	 
-		
+			}
+
 			return false;
 
 		} catch (IllegalArgumentException e) {
 
 			return false;
 
+		}
+
+	}
+
+	/**
+	 * 
+	 * Gestisce la cancellazione dal catalogo globale di un articolo di cui sia noto
+	 * il nome. Evita che vengano memorizzati articoli "fantasma" rispettando i
+	 * principi MVC. Rimuove da tutte le liste in cui un articolo può essere stato
+	 * memorizzato, sia dai cancellati che dagli attivi.
+	 * 
+	 * @param nomeArticolo il nome dell'articolo da rimuovere.
+	 * @return true se la cancellazione è riuscita, false altrimenti.
+	 * 
+	 */
+
+	public boolean gestisciCancellazioneArticoloDalCatalogo(String nomeArticolo) {
+
+		try {
+
+				Articolo articoloDaRimuovere = GestioneListe.getArticolo(nomeArticolo);
+
+				if (articoloDaRimuovere == null) {
+
+					return false;
+				}
+
+				GestioneListe.cancellaArticolo(nomeArticolo);
+				
+
+				java.util.Collection<ListaDiArticoli> tutteLeListe = GestioneListe.getTutteLeListe();
+
+				
+				if (tutteLeListe != null) {
+
+					for (ListaDiArticoli lista : tutteLeListe) {
+
+						lista.rimuoviDefinitivamenteDaComprare(articoloDaRimuovere);
+
+						lista.rimuoviDefinitivamenteDaCancellati(articoloDaRimuovere);
+
+				}
+
+			}
+
+			return true;
+
+		} catch (IllegalArgumentException e) {
+
+			return false;
 		}
 
 	}

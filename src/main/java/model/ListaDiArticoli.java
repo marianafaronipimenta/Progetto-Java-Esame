@@ -210,7 +210,7 @@ public class ListaDiArticoli implements Iterable<Articolo> {
 	/**
 	 * Restituisce una copia degli articoli cancellati.
 	 * 
-	 * @return Una lista degli articoli rimossi..
+	 * @return Una lista degli articoli rimossi.
 	 */
 
 	public List<Articolo> getArticoliCancellati() {
@@ -218,6 +218,29 @@ public class ListaDiArticoli implements Iterable<Articolo> {
 		return new ArrayList<>(articoliCancellati);
 	}
 
+	
+	/**
+	 * Rimuove definitivamente un articolo dalla lista dei presenti se esistente.
+	 * 
+	 * @param articolo L'articolo da eliminare.
+	 */
+	
+	public void rimuoviDefinitivamenteDaComprare(Articolo articolo) {
+	
+		this.articoliDaComprare.remove(articolo);
+	}
+	
+	/**
+	 * Rimuove definitivamente un articolo dalla lista dei cancellati se esistente.
+	 * 
+	 * @param articolo L'articolo da eliminare.
+	 */
+	
+	public void rimuoviDefinitivamenteDaCancellati(Articolo articolo) {
+	
+		this.articoliCancellati.remove(articolo);
+	}
+	
 	/**
 	 * Permette una iterazione combinata: restituisce prima gli articoli attivi e poi quelli nella lista dei cancellati
 	 * 

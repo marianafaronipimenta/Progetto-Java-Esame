@@ -29,6 +29,7 @@ public class OpsPanel extends JPanel{
 		
 		JButton creaLista = new JButton("Crea lista");
 		JButton cancellaLista = new JButton("Cancella lista");
+		JButton selezionaLista = new JButton("Seleziona lista");
 		JButton aggiungiArticoloCatalogo = new JButton("Aggiungi articolo al catalago");
 		JButton inserisceArticoloLista = new JButton("Inserisce articolo in una lista");
 		JButton rimuoviArticoloLista = new JButton("Rimuovi articolo da lista");
@@ -40,6 +41,7 @@ public class OpsPanel extends JPanel{
 	
 		creaLista.setActionCommand("CREA_LISTA");
 		cancellaLista.setActionCommand("CANCELLA_LISTA");
+		selezionaLista.setActionCommand("SELEZIONA_LISTA");
 		aggiungiArticoloCatalogo.setActionCommand("AGGIUNGI_ARTICOLO");
 		inserisceArticoloLista.setActionCommand("INSERISCI_ARTICOLO_LISTA");
 		rimuoviArticoloLista.setActionCommand("RIMUOVI_ARTICOLO_LISTA");
@@ -52,6 +54,7 @@ public class OpsPanel extends JPanel{
 		
 		creaLista.addActionListener(controller);
 		cancellaLista.addActionListener(controller);
+		selezionaLista.addActionListener(controller);
 		aggiungiArticoloCatalogo.addActionListener(controller);
 		inserisceArticoloLista.addActionListener(controller);
 		rimuoviArticoloLista.addActionListener(controller);
@@ -63,6 +66,7 @@ public class OpsPanel extends JPanel{
 		
 		add(creaLista);
 		add(cancellaLista);
+		add(selezionaLista);
 		add(aggiungiArticoloCatalogo);
 		add(inserisceArticoloLista);
 		add(rimuoviArticoloLista);

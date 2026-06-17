@@ -58,9 +58,10 @@ public class InterfacciaTestuale {
 			System.out.println("3. Aggiungi una categoria globale");
 			System.out.println("4. Inserisci un articolo completo in una lista");
 			System.out.println("5. Rimuovi un articolo da una lista (sposta nei cancellati)");
-			System.out.println("6. Ripristina un articolo dai cancellati");
-			System.out.println("7. Calcola il prezzo totale di una lista");
-			System.out.println("8. Cerca un articolo per prefisso in una lista");
+			System.out.println("6. Rimuovi articolo dal catalogo globale");
+			System.out.println("7. Ripristina un articolo dai cancellati");
+			System.out.println("8. Calcola il prezzo totale di una lista");
+			System.out.println("9. Cerca un articolo per prefisso in una lista");
 			System.out.println("0. Esci");
 			System.out.print("Scegli un'opzione: ");
 
@@ -88,15 +89,21 @@ public class InterfacciaTestuale {
 				eseguiRimozioneArticoloDaLista();
 				break;
 
+				
 			case "6":
+				eseguiCancellazioneArticoloDalCatalogo(); 
+				break;
+		
+				
+			case "7":
 				eseguiRipristinoArticoloInLista();
 				break;
 
-			case "7":
+			case "8":
 				eseguiCalcoloTotale();
 				break;
 
-			case "8":
+			case "9":
 				eseguiRicercaPerPrefisso();
 				break;
 
@@ -304,6 +311,25 @@ public class InterfacciaTestuale {
 
 		}
 
+	}
+	
+	
+	private void eseguiCancellazioneArticoloDalCatalogo() {
+		boolean successo = false;
+		while (!successo) {
+			System.out.print("Inserisci il nome dell'articolo da eliminare dal catalogo globale: ");
+			String nome = scanner.nextLine().trim();
+
+			if (controller.gestisciCancellazioneArticoloDalCatalogo(nome)) {
+			
+				System.out.println("Articolo rimosso globalmente dal catalogo e da tutte le liste con successo!");
+				successo = true;
+			
+			} else {
+			
+				System.out.println("Errore: Articolo non trovato nel catalogo globale. Riprova.");
+			}
+		}
 	}
 
 	private void eseguiRipristinoArticoloInLista() {

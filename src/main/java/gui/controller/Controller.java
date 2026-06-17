@@ -159,8 +159,62 @@ public class Controller implements ActionListener {
 				return;
 
 			}
+			
+			gui.vista.DialogoArticolo dialogo = new gui.vista.DialogoArticolo();
+			
+			String[] datiInseriti = dialogo.getInputs("Nuovo articolo per la lista: " + listaAttuale);
 
+			
+			if (datiInseriti != null) {
+				
+				String nomeArt = datiInseriti[0].trim();
+				String prezzoStr = datiInseriti[1].trim();
+				String catArt = datiInseriti[2].trim();
+				String notaArt = datiInseriti[3].trim();
+				
+				if(nomeArt.isEmpty()) {
+					
+					JOptionPane.showMessageDialog(view, "Errore: il nome dell'articolo è obbligatorio!", "Errore", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				double prezzoDouble = 0.0;
+				
+				if (!prezzoStr.isEmpty()) {
+					
+					try {
+						
+							prezzoDouble = Double.parseDouble(prezzoStr);
+							
+							if (prezzoDouble < 0) {
+								
+								JOptionPane.showMessageDialog(view, "Errore: il prezzo non può essere negativo.formato prezzo non valido.");
+							
+							return;
+								
+							}
+							
+					} catch (NumberFormatException ex) {
+						
+						JOptionPane.showMessageDialog(view, "Errore: formato prezzo non valido.", "Errore", JOptionPane.ERROR_MESSAGE);
+					
+						return;
+					}
+				}
+				
+				if (gestisciInserimentoArticoloCompleto(nomeArt, catArt, notaArt, prezzoDouble)) {
+					
+					JOptionPane.showMessageDialog(view, "Articolo inserito con successo!");
+	
+			} else {
+					
+					JOptionPane.showMessageDialog(view, "Errore: Impossibile inserire l'articolo (probabile duplicato).", "Errore", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+				
 		}
+				
+				
 
 		else if ("CANCELLA_ARTICOLO".equals(comando)) {
 
@@ -552,26 +606,24 @@ public class Controller implements ActionListener {
 
 		try {
 
-				Articolo articoloDaRimuovere = GestioneListe.getArticolo(nomeArticolo);
+			Articolo articoloDaRimuovere = GestioneListe.getArticolo(nomeArticolo);
 
-				if (articoloDaRimuovere == null) {
+			if (articoloDaRimuovere == null) {
 
-					return false;
-				}
+				return false;
+			}
 
-				GestioneListe.cancellaArticolo(nomeArticolo);
-				
+			GestioneListe.cancellaArticolo(nomeArticolo);
 
-				java.util.Collection<ListaDiArticoli> tutteLeListe = GestioneListe.getTutteLeListe();
+			java.util.Collection<ListaDiArticoli> tutteLeListe = GestioneListe.getTutteLeListe();
 
-				
-				if (tutteLeListe != null) {
+			if (tutteLeListe != null) {
 
-					for (ListaDiArticoli lista : tutteLeListe) {
+				for (ListaDiArticoli lista : tutteLeListe) {
 
-						lista.rimuoviDefinitivamenteDaComprare(articoloDaRimuovere);
+					lista.rimuoviDefinitivamenteDaComprare(articoloDaRimuovere);
 
-						lista.rimuoviDefinitivamenteDaCancellati(articoloDaRimuovere);
+					lista.rimuoviDefinitivamenteDaCancellati(articoloDaRimuovere);
 
 				}
 

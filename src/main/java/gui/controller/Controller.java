@@ -42,6 +42,7 @@ public class Controller implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 
 		String comando = e.getActionCommand();
+		
 
 		if ("CREA_LISTA".equals(comando)) {
 
@@ -62,6 +63,27 @@ public class Controller implements ActionListener {
 				}
 			}
 
+		}
+		
+		else if ("SELEZIONA_LISTA".equals(comando)) {
+
+			String nome = JOptionPane.showInputDialog(view, "Inserisci il nome della lista da visualizzare: "); 
+			
+			if (nome != null && !nome.trim().isEmpty()) {
+				
+				if (GestioneListe.getLista(nome) != null) {
+				
+					this.listaAttuale = nome; 
+					
+					JOptionPane.showMessageDialog(view, "Lista \"" + nome + "\" selezionata con successo.");
+					
+					aggiornaInterfacciaGrafica(listaAttuale); 
+				
+				} else {
+					
+					JOptionPane.showMessageDialog(view, "Errore: La lista \"" + nome + "\" non esiste.", "Errore", JOptionPane.ERROR_MESSAGE);
+				}
+			}
 		}
 
 		else if ("CANCELLA_LISTA".equals(comando)) {

@@ -7,7 +7,6 @@ import javax.swing.JOptionPane;
 import model.GestioneListe;
 import model.ListaDiArticoli;
 import model.Articolo;
-import model.Categoria;
 
 /**
  * Controller dell'architettura MVC. Il controller serve a gestire il flusso tra
@@ -234,6 +233,64 @@ public class Controller implements ActionListener {
 
 					JOptionPane.showMessageDialog(view, "Errore: Articolo non trovato nel catalogo globale.", "Errore",
 							JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		}
+		
+		
+		
+		else if ("INSERISCI_ARTICOLO_LISTA".equals(comando)) {
+			
+			if (listaAttuale == null) {
+		
+				JOptionPane.showMessageDialog(view, "Seleziona prima una lista!", "Avviso", JOptionPane.WARNING_MESSAGE);
+				
+				return;
+			}
+			String nomeArt = JOptionPane.showInputDialog(view, "Nome dell'articolo già esistente nel catalogo da inserire in questa lista:");
+			
+			if (nomeArt != null && !nomeArt.trim().isEmpty()) {
+				
+				Articolo art = GestioneListe.getArticolo(nomeArt);
+				
+				if (gestisciAggiuntaArticoloLista(listaAttuale, art)) {
+					
+					JOptionPane.showMessageDialog(view, "Articolo inserito nella lista attuale.");
+					
+					aggiornaInterfacciaGrafica(listaAttuale);
+				
+				} else {
+				
+					JOptionPane.showMessageDialog(view, "Errore: Articolo non presente nel catalogo o già in lista.", "Errore", JOptionPane.ERROR_MESSAGE);
+				
+				}
+			}
+		}
+		
+		
+		else if ("RIMUOVI_ARTICOLO_LISTA".equals(comando)) {
+			
+			if (listaAttuale == null) {
+				
+				JOptionPane.showMessageDialog(view, "Seleziona prima una lista!", "Avviso", JOptionPane.WARNING_MESSAGE);
+				
+				return;
+			}
+			
+			String nomeArt = JOptionPane.showInputDialog(view, "Nome dell'articolo da spostare nei cancellati:");
+			
+			if (nomeArt != null && !nomeArt.trim().isEmpty()) {
+				
+				Articolo art = GestioneListe.getArticolo(nomeArt);
+				
+				if (gestisciRimozioneArticoloDallaLista(listaAttuale, art)) {
+				
+				JOptionPane.showMessageDialog(view, "Articolo spostato nei cancellati di questa lista.");
+					aggiornaInterfacciaGrafica(listaAttuale);
+				
+				} else {
+				
+					JOptionPane.showMessageDialog(view, "Errore: Articolo non presente in questa lista.", "Errore", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		}

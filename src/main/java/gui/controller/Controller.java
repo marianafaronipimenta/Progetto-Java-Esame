@@ -7,7 +7,6 @@ import javax.swing.JOptionPane;
 import model.GestioneListe;
 import model.ListaDiArticoli;
 import model.Articolo;
-import model.Categoria;
 
 /**
  * Controller dell'architettura MVC. Il controller serve a gestire il flusso tra
@@ -238,57 +237,62 @@ public class Controller implements ActionListener {
 			}
 		}
 		
-		else if ("RIPRISTINA_ARTICOLO".equals(comando)) {
+		
+		
+		else if ("INSERISCI_ARTICOLO_LISTA".equals(comando)) {
+			
 			if (listaAttuale == null) {
-				JOptionPane.showMessageDialog(view,  "Seleziona prima una lista!", "Avisso", JOptionPane.WARNING_MESSAGE);
+		
+				JOptionPane.showMessageDialog(view, "Seleziona prima una lista!", "Avviso", JOptionPane.WARNING_MESSAGE);
+				
 				return;
 			}
+			String nomeArt = JOptionPane.showInputDialog(view, "Nome dell'articolo già esistente nel catalogo da inserire in questa lista:");
 			
-
-			String nomeArt = JOptionPane.showInputDialog(view, "Nome dell'articola da ripristinare:");
-			
-			if(nomeArt != null)
-			{
+			if (nomeArt != null && !nomeArt.trim().isEmpty()) {
+				
 				Articolo art = GestioneListe.getArticolo(nomeArt);
 				
-				if(gestisciRipristinoArticoloInLista(listaAttuale, art)) {
-					JOptionPane.showMessageDialog(view, "Articolo ripristinato nella lista.");
+				if (gestisciAggiuntaArticoloLista(listaAttuale, art)) {
+					
+					JOptionPane.showMessageDialog(view, "Articolo inserito nella lista attuale.");
+					
 					aggiornaInterfacciaGrafica(listaAttuale);
+				
 				} else {
-					JOptionPane.showMessageDialog(view,  "Errore: Articolo non trovato nei cancellati.", "Errore", JOptionPane.WARNING_MESSAGE);
+				
+					JOptionPane.showMessageDialog(view, "Errore: Articolo non presente nel catalogo o già in lista.", "Errore", JOptionPane.ERROR_MESSAGE);
+				
 				}
 			}
 		}
 		
-		else if ("CALCOLA_TOTALE".equals(comando)) {
-			 if (listaAttuale == null) {
-			        JOptionPane.showMessageDialog(view, "Seleziona prima una lista!", "Avviso",
-			                JOptionPane.WARNING_MESSAGE);
-			        return;
-			    }
-
-			    double totale = ottieniCostoTotaleLista(listaAttuale);
-			    JOptionPane.showMessageDialog(view, "Il costo totale è di: € " + String.format("%.2f", totale));
-		}
 		
-		else if("CERCA_PREFISSO".equals(comando)) {
-			   if (listaAttuale == null) {
-			        JOptionPane.showMessageDialog(view, "Seleziona prima una lista!", "Avviso",
-			                JOptionPane.WARNING_MESSAGE);
-			        return;
-			    }
-
-			    String prefisso = JOptionPane.showInputDialog(view, "Inserisci il prefisso da cercare:");
-
-			    if (prefisso != null && !prefisso.trim().isEmpty()) {
-			        Articolo trovato = gestisciRicercaPerPrefisso(listaAttuale, prefisso);
-
-			        if (trovato != null) {
-			            JOptionPane.showMessageDialog(view, "Articolo trovato: " + trovato.toString());
-			        } else {
-			            JOptionPane.showMessageDialog(view, "Nessun articolo trovato con prefisso \"" + prefisso + "\"");
-			        }
-			    }
+		else if ("RIMUOVI_ARTICOLO_LISTA".equals(comando)) {
+			
+			if (listaAttuale == null) {
+				
+				JOptionPane.showMessageDialog(view, "Seleziona prima una lista!", "Avviso", JOptionPane.WARNING_MESSAGE);
+				
+				return;
+			}
+			
+			String nomeArt = JOptionPane.showInputDialog(view, "Nome dell'articolo da spostare nei cancellati:");
+			
+			if (nomeArt != null && !nomeArt.trim().isEmpty()) {
+				
+				Articolo art = GestioneListe.getArticolo(nomeArt);
+				
+				if (gestisciRimozioneArticoloDallaLista(listaAttuale, art)) {
+				
+				JOptionPane.showMessageDialog(view, "Articolo spostato nei cancellati di questa lista.");
+					aggiornaInterfacciaGrafica(listaAttuale);
+				
+				} else {
+				
+					JOptionPane.showMessageDialog(view, "Errore: Articolo non presente in questa lista.", "Errore", JOptionPane.ERROR_MESSAGE);
+				}
+			}
 		}
 	}
 

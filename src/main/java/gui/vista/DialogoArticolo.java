@@ -42,7 +42,7 @@ public class DialogoArticolo {
 	public String[] getInputs(String msg) {
 		int risultato = JOptionPane.showConfirmDialog(null, inputs, msg, JOptionPane.OK_CANCEL_OPTION);
 		
-		if(risultato == JOptionPane.OK_CANCEL_OPTION)
+		if(risultato == JOptionPane.OK_OPTION)
 		{
 			return new String[] {
 				nome.getText(),

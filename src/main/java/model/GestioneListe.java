@@ -25,10 +25,11 @@ public class GestioneListe {
 	 * @param nome il nome della lista da creare
 	 */
 	public static void creaLista(String nome) {
-		if (listeArticoli.containsKey(nome)) {
+		String chave = nome.toLowerCase();
+		if (listeArticoli.containsKey(chave)) {
 			throw new IllegalArgumentException("Lista gia' esistente: " + nome);
 		}
-		listeArticoli.put(nome, new ListaDiArticoli(nome));
+		listeArticoli.put(chave, new ListaDiArticoli(nome));
 
 	}
 
@@ -39,7 +40,7 @@ public class GestioneListe {
 	 * @return la lista di articoli associata al nome, o null se non esiste
 	 */
 	public static ListaDiArticoli getLista(String nome) {
-		return listeArticoli.get(nome);
+		return listeArticoli.get(nome.toLowerCase());
 	}
 
 	/**
@@ -57,10 +58,11 @@ public class GestioneListe {
 	 * @exception IllegalArgumentException se la lista non esiste
 	 */
 	public static boolean cancellaLista(String nome) {
-		if (!listeArticoli.containsKey(nome)) {
+		String chave = nome.toLowerCase();
+		if (!listeArticoli.containsKey(chave)) {
 			throw new IllegalArgumentException("Lista non trovata: " + nome);
 		}
-		listeArticoli.remove(nome);
+		listeArticoli.remove(chave);
 
 		return true;
 	}

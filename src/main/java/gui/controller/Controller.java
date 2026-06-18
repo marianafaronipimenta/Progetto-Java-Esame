@@ -41,7 +41,6 @@ public class Controller implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 
 		String comando = e.getActionCommand();
-		
 
 		if ("CREA_LISTA".equals(comando)) {
 
@@ -63,24 +62,25 @@ public class Controller implements ActionListener {
 			}
 
 		}
-		
+
 		else if ("SELEZIONA_LISTA".equals(comando)) {
 
-			String nome = JOptionPane.showInputDialog(view, "Inserisci il nome della lista da visualizzare: "); 
-			
+			String nome = JOptionPane.showInputDialog(view, "Inserisci il nome della lista da visualizzare: ");
+
 			if (nome != null && !nome.trim().isEmpty()) {
-				
+
 				if (GestioneListe.getLista(nome) != null) {
-				
-					this.listaAttuale = nome; 
-					
+
+					this.listaAttuale = nome;
+
 					JOptionPane.showMessageDialog(view, "Lista \"" + nome + "\" selezionata con successo.");
-					
-					aggiornaInterfacciaGrafica(listaAttuale); 
-				
+
+					aggiornaInterfacciaGrafica(listaAttuale);
+
 				} else {
-					
-					JOptionPane.showMessageDialog(view, "Errore: La lista \"" + nome + "\" non esiste.", "Errore", JOptionPane.ERROR_MESSAGE);
+
+					JOptionPane.showMessageDialog(view, "Errore: La lista \"" + nome + "\" non esiste.", "Errore",
+							JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		}
@@ -92,22 +92,20 @@ public class Controller implements ActionListener {
 			if (nome != null) {
 
 				if (gestisciCancellazioneLista(nome)) {
+					
+					if (nome.equals(listaAttuale)) {
+
+						this.listaAttuale = null;
+					}
 
 					JOptionPane.showMessageDialog(view, "Lista rimossa.");
+					aggiornaInterfacciaGrafica(listaAttuale);
+					
+				} else {
 
+					JOptionPane.showMessageDialog(view, "Errore: Lista non trovata.", "Errore", JOptionPane.ERROR_MESSAGE);
 				}
-
-				if (nome.equals(listaAttuale)) {
-
-					this.listaAttuale = null;
-				}
-
-				aggiornaInterfacciaGrafica(listaAttuale);
-
-			} else {
-
-				JOptionPane.showMessageDialog(view, "Errore: Lista non trovata.", "Errore", JOptionPane.ERROR_MESSAGE);
-			}
+			} 
 		}
 
 		else if ("AGGIUNGI_CATEGORIA".equals(comando)) {
@@ -158,62 +156,64 @@ public class Controller implements ActionListener {
 				return;
 
 			}
-			
+
 			gui.vista.DialogoArticolo dialogo = new gui.vista.DialogoArticolo();
-			
+
 			String[] datiInseriti = dialogo.getInputs("Nuovo articolo per la lista: " + listaAttuale);
 
-			
 			if (datiInseriti != null) {
-				
+
 				String nomeArt = datiInseriti[0].trim();
 				String prezzoStr = datiInseriti[1].trim();
 				String catArt = datiInseriti[2].trim();
 				String notaArt = datiInseriti[3].trim();
-				
-				if(nomeArt.isEmpty()) {
-					
-					JOptionPane.showMessageDialog(view, "Errore: il nome dell'articolo è obbligatorio!", "Errore", JOptionPane.ERROR_MESSAGE);
+
+				if (nomeArt.isEmpty()) {
+
+					JOptionPane.showMessageDialog(view, "Errore: il nome dell'articolo è obbligatorio!", "Errore",
+							JOptionPane.ERROR_MESSAGE);
 					return;
 				}
-				
+
 				double prezzoDouble = 0.0;
-				
+
 				if (!prezzoStr.isEmpty()) {
-					
+
 					try {
-						
-							prezzoDouble = Double.parseDouble(prezzoStr);
-							
-							if (prezzoDouble < 0) {
-								
-								JOptionPane.showMessageDialog(view, "Errore: il prezzo non può essere negativo.formato prezzo non valido.");
-							
+
+						prezzoDouble = Double.parseDouble(prezzoStr);
+
+						if (prezzoDouble < 0) {
+
+							JOptionPane.showMessageDialog(view,
+									"Errore: il prezzo non può essere negativo.formato prezzo non valido.");
+
 							return;
-								
-							}
-							
+
+						}
+
 					} catch (NumberFormatException ex) {
-						
-						JOptionPane.showMessageDialog(view, "Errore: formato prezzo non valido.", "Errore", JOptionPane.ERROR_MESSAGE);
-					
+
+						JOptionPane.showMessageDialog(view, "Errore: formato prezzo non valido.", "Errore",
+								JOptionPane.ERROR_MESSAGE);
+
 						return;
 					}
 				}
-				
+
 				if (gestisciInserimentoArticoloCompleto(nomeArt, catArt, notaArt, prezzoDouble)) {
-					
+
 					JOptionPane.showMessageDialog(view, "Articolo inserito con successo!");
-	
-			} else {
-					
-					JOptionPane.showMessageDialog(view, "Errore: Impossibile inserire l'articolo (probabile duplicato).", "Errore", JOptionPane.ERROR_MESSAGE);
+
+				} else {
+
+					JOptionPane.showMessageDialog(view,
+							"Errore: Impossibile inserire l'articolo (probabile duplicato).", "Errore",
+							JOptionPane.ERROR_MESSAGE);
 				}
 			}
-				
+
 		}
-				
-				
 
 		else if ("CANCELLA_ARTICOLO".equals(comando)) {
 
@@ -236,61 +236,116 @@ public class Controller implements ActionListener {
 				}
 			}
 		}
-		
-		
-		
+
 		else if ("INSERISCI_ARTICOLO_LISTA".equals(comando)) {
-			
+
 			if (listaAttuale == null) {
-		
-				JOptionPane.showMessageDialog(view, "Seleziona prima una lista!", "Avviso", JOptionPane.WARNING_MESSAGE);
-				
+
+				JOptionPane.showMessageDialog(view, "Seleziona prima una lista!", "Avviso",
+						JOptionPane.WARNING_MESSAGE);
+
 				return;
 			}
-			String nomeArt = JOptionPane.showInputDialog(view, "Nome dell'articolo già esistente nel catalogo da inserire in questa lista:");
-			
+			String nomeArt = JOptionPane.showInputDialog(view,
+					"Nome dell'articolo già esistente nel catalogo da inserire in questa lista:");
+
 			if (nomeArt != null && !nomeArt.trim().isEmpty()) {
-				
+
 				Articolo art = GestioneListe.getArticolo(nomeArt);
-				
+
 				if (gestisciAggiuntaArticoloLista(listaAttuale, art)) {
-					
+
 					JOptionPane.showMessageDialog(view, "Articolo inserito nella lista attuale.");
-					
+
 					aggiornaInterfacciaGrafica(listaAttuale);
-				
+
 				} else {
-				
-					JOptionPane.showMessageDialog(view, "Errore: Articolo non presente nel catalogo o già in lista.", "Errore", JOptionPane.ERROR_MESSAGE);
-				
+
+					JOptionPane.showMessageDialog(view, "Errore: Articolo non presente nel catalogo o già in lista.",
+							"Errore", JOptionPane.ERROR_MESSAGE);
+
 				}
 			}
 		}
-		
-		
+
 		else if ("RIMUOVI_ARTICOLO_LISTA".equals(comando)) {
-			
+
 			if (listaAttuale == null) {
-				
-				JOptionPane.showMessageDialog(view, "Seleziona prima una lista!", "Avviso", JOptionPane.WARNING_MESSAGE);
-				
+
+				JOptionPane.showMessageDialog(view, "Seleziona prima una lista!", "Avviso",
+						JOptionPane.WARNING_MESSAGE);
+
 				return;
 			}
-			
+
 			String nomeArt = JOptionPane.showInputDialog(view, "Nome dell'articolo da spostare nei cancellati:");
-			
+
 			if (nomeArt != null && !nomeArt.trim().isEmpty()) {
-				
+
 				Articolo art = GestioneListe.getArticolo(nomeArt);
-				
+
 				if (gestisciRimozioneArticoloDallaLista(listaAttuale, art)) {
-				
-				JOptionPane.showMessageDialog(view, "Articolo spostato nei cancellati di questa lista.");
+
+					JOptionPane.showMessageDialog(view, "Articolo spostato nei cancellati di questa lista.");
 					aggiornaInterfacciaGrafica(listaAttuale);
-				
+
 				} else {
-				
-					JOptionPane.showMessageDialog(view, "Errore: Articolo non presente in questa lista.", "Errore", JOptionPane.ERROR_MESSAGE);
+
+					JOptionPane.showMessageDialog(view, "Errore: Articolo non presente in questa lista.", "Errore",
+							JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		}
+
+		else if ("RIPRISTINA_ARTICOLO".equals(comando)) {
+			if (listaAttuale == null) {
+				JOptionPane.showMessageDialog(view, "Seleziona prima una lista!", "Avisso",
+						JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+
+			String nomeArt = JOptionPane.showInputDialog(view, "Nome dell'articola da ripristinare:");
+
+			if (nomeArt != null) {
+				Articolo art = GestioneListe.getArticolo(nomeArt);
+
+				if (gestisciRipristinoArticoloInLista(listaAttuale, art)) {
+					JOptionPane.showMessageDialog(view, "Articolo ripristinato nella lista.");
+					aggiornaInterfacciaGrafica(listaAttuale);
+				} else {
+					JOptionPane.showMessageDialog(view, "Errore: Articolo non trovato nei cancellati.", "Errore",
+							JOptionPane.WARNING_MESSAGE);
+				}
+			}
+		}
+
+		else if ("CALCOLA_TOTALE".equals(comando)) {
+			if (listaAttuale == null) {
+				JOptionPane.showMessageDialog(view, "Seleziona prima una lista!", "Avviso",
+						JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+
+			double totale = ottieniCostoTotaleLista(listaAttuale);
+			JOptionPane.showMessageDialog(view, "Il costo totale è di: € " + String.format("%.2f", totale));
+		}
+
+		else if ("CERCA_PREFISSO".equals(comando)) {
+			if (listaAttuale == null) {
+				JOptionPane.showMessageDialog(view, "Seleziona prima una lista!", "Avviso",
+						JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+
+			String prefisso = JOptionPane.showInputDialog(view, "Inserisci il prefisso da cercare:");
+
+			if (prefisso != null && !prefisso.trim().isEmpty()) {
+				Articolo trovato = gestisciRicercaPerPrefisso(listaAttuale, prefisso);
+
+				if (trovato != null) {
+					JOptionPane.showMessageDialog(view, "Articolo trovato: " + trovato.toString());
+				} else {
+					JOptionPane.showMessageDialog(view, "Nessun articolo trovato con prefisso \"" + prefisso + "\"");
 				}
 			}
 		}

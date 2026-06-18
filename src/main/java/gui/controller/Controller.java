@@ -237,6 +237,59 @@ public class Controller implements ActionListener {
 				}
 			}
 		}
+		
+		else if ("RIPRISTINA_ARTICOLO".equals(comando)) {
+			if (listaAttuale == null) {
+				JOptionPane.showMessageDialog(view,  "Seleziona prima una lista!", "Avisso", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+			
+
+			String nomeArt = JOptionPane.showInputDialog(view, "Nome dell'articola da ripristinare:");
+			
+			if(nomeArt != null)
+			{
+				Articolo art = GestioneListe.getArticolo(nomeArt);
+				
+				if(gestisciRipristinoArticoloInLista(listaAttuale, art)) {
+					JOptionPane.showMessageDialog(view, "Articolo ripristinato nella lista.");
+					aggiornaInterfacciaGrafica(listaAttuale);
+				} else {
+					JOptionPane.showMessageDialog(view,  "Errore: Articolo non trovato nei cancellati.", "Errore", JOptionPane.WARNING_MESSAGE);
+				}
+			}
+		}
+		
+		else if ("CALCOLA_TOTALE".equals(comando)) {
+			 if (listaAttuale == null) {
+			        JOptionPane.showMessageDialog(view, "Seleziona prima una lista!", "Avviso",
+			                JOptionPane.WARNING_MESSAGE);
+			        return;
+			    }
+
+			    double totale = ottieniCostoTotaleLista(listaAttuale);
+			    JOptionPane.showMessageDialog(view, "Il costo totale è di: € " + String.format("%.2f", totale));
+		}
+		
+		else if("CERCA_PREFISSO".equals(comando)) {
+			   if (listaAttuale == null) {
+			        JOptionPane.showMessageDialog(view, "Seleziona prima una lista!", "Avviso",
+			                JOptionPane.WARNING_MESSAGE);
+			        return;
+			    }
+
+			    String prefisso = JOptionPane.showInputDialog(view, "Inserisci il prefisso da cercare:");
+
+			    if (prefisso != null && !prefisso.trim().isEmpty()) {
+			        Articolo trovato = gestisciRicercaPerPrefisso(listaAttuale, prefisso);
+
+			        if (trovato != null) {
+			            JOptionPane.showMessageDialog(view, "Articolo trovato: " + trovato.toString());
+			        } else {
+			            JOptionPane.showMessageDialog(view, "Nessun articolo trovato con prefisso \"" + prefisso + "\"");
+			        }
+			    }
+		}
 	}
 
 	private void aggiornaInterfacciaGrafica(String nomeListaAttuale) {

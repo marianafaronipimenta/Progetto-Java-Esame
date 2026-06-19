@@ -256,7 +256,7 @@ public class InterfacciaTestuale {
 					
 				}
 			
-				if (controller.gestisciInserimentoArticoloCompleto(nomeArticolo, nomeCategoria, nota, prezzo)) {
+				if (controller.gestisciInserimentoArticoloCompleto(nomeLista, nomeArticolo, nomeCategoria, nota, prezzo)) {
 
 			System.out.println("Articolo \"" + nomeArticolo + "\" inserito nella lista \"" + nomeLista + "\"  e registrato nel catalogo globale!");
 

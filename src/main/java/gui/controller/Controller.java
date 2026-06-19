@@ -207,7 +207,7 @@ public class Controller implements ActionListener {
 				if (gestisciInserimentoArticoloCompleto(nomeArt, catArt, notaArt, prezzoDouble)) {
 
 					JOptionPane.showMessageDialog(view, "Articolo inserito con successo!");
-
+					aggiornaInterfacciaGrafica(listaAttuale);
 				} else {
 
 					JOptionPane.showMessageDialog(view,
@@ -727,29 +727,31 @@ public class Controller implements ActionListener {
 			if (lista == null) {
 				return false;
 			}
-
-			if (GestioneListe.getArticolo(nomeArticolo) != null) {
-				return false;
-			}
-
-			model.Categoria categoria = GestioneListe.getCategorie(nomeCategoria);
-
-			if (categoria == null && nomeCategoria != null && !nomeCategoria.trim().isEmpty()) {
-				GestioneListe.aggiungeCategoria(nomeCategoria);
-				categoria = GestioneListe.getCategorie(nomeCategoria);
-			}
-
-			if (categoria == null) {
-				categoria = GestioneListe.getCategorie("Non categorizzato");
-				if (categoria == null) {
-					GestioneListe.aggiungeCategoria("Non categorizzato");
-					categoria = GestioneListe.getCategorie("Non categorizzato");
-				}
-			}
-
-			GestioneListe.aggiungeArticolo(nomeArticolo, categoria, nota, prezzo);
-
+		
 			Articolo artInCatalogo = GestioneListe.getArticolo(nomeArticolo);
+			
+			if(artInCatalogo == null)
+			{
+				model.Categoria categoria = GestioneListe.getCategorie(nomeCategoria);
+				
+				if (categoria == null && nomeCategoria != null && !nomeCategoria.trim().isEmpty()) {
+					GestioneListe.aggiungeCategoria(nomeCategoria);
+					categoria = GestioneListe.getCategorie(nomeCategoria);
+				}
+				
+				if (categoria == null) {
+					categoria = GestioneListe.getCategorie("Non categorizzato");
+					if (categoria == null) {
+						GestioneListe.aggiungeCategoria("Non categorizzato");
+						categoria = GestioneListe.getCategorie("Non categorizzato");
+					}
+				}
+				
+				GestioneListe.aggiungeArticolo(nomeArticolo, categoria, nota, prezzo);
+
+				artInCatalogo = GestioneListe.getArticolo(nomeArticolo);
+			}
+			
 			lista.aggiungiArticolo(artInCatalogo);
 
 			return true;

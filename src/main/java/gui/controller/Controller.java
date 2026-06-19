@@ -50,6 +50,8 @@ public class Controller implements ActionListener {
 
 				if (gestisciCreazioneLista(nome)) {
 
+					this.listaAttuale = nome.trim();
+					
 					JOptionPane.showMessageDialog(view, "Lista creata con successo!");
 
 					aggiornaInterfacciaGrafica(listaAttuale);

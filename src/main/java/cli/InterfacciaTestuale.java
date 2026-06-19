@@ -32,6 +32,8 @@ public class InterfacciaTestuale {
 		this.controller = controller;
 
 		this.scanner = new Scanner(System.in);
+		
+		avviaMenu();
 
 	}
 
@@ -41,7 +43,7 @@ public class InterfacciaTestuale {
 	 * 
 	 */
 
-	public void avviaMenu() {
+	private void avviaMenu() {
 
 		boolean inEsecuzione = true;
 

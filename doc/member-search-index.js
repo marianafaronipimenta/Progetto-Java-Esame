@@ -1,1 +1,1 @@
-memberSearchIndex = [{"p":"<Unnamed>","c":"Main","l":"Main()","u":"%3Cinit%3E()"},{"p":"<Unnamed>","c":"Main","l":"main(String[])","u":"main(java.lang.String[])"}];updateSearchResults();
+memberSearchIndex = [{"p":"gui.vista","c":"DialogoArticolo","l":"DialogoArticolo()","u":"%3Cinit%3E()"},{"p":"gui.vista","c":"DialogoArticolo","l":"getInputs(String)","u":"getInputs(java.lang.String)"}];updateSearchResults();

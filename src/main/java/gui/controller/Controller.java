@@ -92,7 +92,7 @@ public class Controller implements ActionListener {
 			if (nome != null) {
 
 				if (gestisciCancellazioneLista(nome)) {
-					
+
 					if (nome.equals(listaAttuale)) {
 
 						this.listaAttuale = null;
@@ -100,12 +100,13 @@ public class Controller implements ActionListener {
 
 					JOptionPane.showMessageDialog(view, "Lista rimossa.");
 					aggiornaInterfacciaGrafica(listaAttuale);
-					
+
 				} else {
 
-					JOptionPane.showMessageDialog(view, "Errore: Lista non trovata.", "Errore", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(view, "Errore: Lista non trovata.", "Errore",
+							JOptionPane.ERROR_MESSAGE);
 				}
-			} 
+			}
 		}
 
 		else if ("AGGIUNGI_CATEGORIA".equals(comando)) {
@@ -299,7 +300,7 @@ public class Controller implements ActionListener {
 
 		else if ("RIPRISTINA_ARTICOLO".equals(comando)) {
 			if (listaAttuale == null) {
-				JOptionPane.showMessageDialog(view, "Seleziona prima una lista!", "Avisso",
+				JOptionPane.showMessageDialog(view, "Seleziona prima una lista!", "Avviso",
 						JOptionPane.WARNING_MESSAGE);
 				return;
 			}
@@ -314,12 +315,28 @@ public class Controller implements ActionListener {
 					aggiornaInterfacciaGrafica(listaAttuale);
 				} else {
 					JOptionPane.showMessageDialog(view, "Errore: Articolo non trovato nei cancellati.", "Errore",
-							JOptionPane.WARNING_MESSAGE);
+							JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		}
+		
+		else if ("SVUOTA_CANCELLATI".equals(comando)) {
 
+			if (listaAttuale == null) {
+				JOptionPane.showMessageDialog(view, "Seleziona prima una lista!", "Avviso",
+					JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+
+			if (gestisciSvuotaCancellati(listaAttuale)) {
+				JOptionPane.showMessageDialog(view, "Lista dei cancellati svuotata.");
+				aggiornaInterfacciaGrafica(listaAttuale);
+			}
+
+		}
+		
 		else if ("CALCOLA_TOTALE".equals(comando)) {
+			
 			if (listaAttuale == null) {
 				JOptionPane.showMessageDialog(view, "Seleziona prima una lista!", "Avviso",
 						JOptionPane.WARNING_MESSAGE);
@@ -345,11 +362,13 @@ public class Controller implements ActionListener {
 				if (trovato != null) {
 					JOptionPane.showMessageDialog(view, "Articolo trovato: " + trovato.toString());
 				} else {
+					
 					JOptionPane.showMessageDialog(view, "Nessun articolo trovato con prefisso \"" + prefisso + "\"");
 				}
 			}
-		}
+		
 	}
+}			
 
 	private void aggiornaInterfacciaGrafica(String nomeListaAttuale) {
 
@@ -579,7 +598,7 @@ public class Controller implements ActionListener {
 
 		ListaDiArticoli lista = GestioneListe.getLista(nomeLista);
 
-		if (lista == null) {
+		if (lista == null && articolo == null) {
 
 			return false;
 		}
@@ -599,6 +618,19 @@ public class Controller implements ActionListener {
 	}
 
 	/**
+	 * Riceve il nome dell'articolo come stringa, evitando che la CLI debba accedere
+	 * direttamente al model per recuperare l'oggetto.
+	 *
+	 * @param nomeLista    Il nome della lista.
+	 * @param nomeArticolo Il nome dell'articolo da rimuovere.
+	 * @return true se rimosso, false altrimenti.
+	 */
+
+	public boolean gestisciRimozioneArticoloDallaLista(String nomeLista, String nomeArticolo) {
+		return gestisciRimozioneArticoloDallaLista(nomeLista, GestioneListe.getArticolo(nomeArticolo));
+	}
+
+	/**
 	 * 
 	 * Rispristino di un articolo dalla lista dei cancellati di una lista specifica.
 	 * 
@@ -612,7 +644,7 @@ public class Controller implements ActionListener {
 
 		ListaDiArticoli lista = GestioneListe.getLista(nomeLista);
 
-		if (lista == null) {
+		if (lista == null || articolo == null) {
 
 			return false;
 		}
@@ -632,9 +664,23 @@ public class Controller implements ActionListener {
 	}
 
 	/**
-	 * Crea un articolo completo e lo inserisce in una lista specifica. Se la
-	 * categoria inserita non esiste ancora nel catalogo globale,viene creata prima
-	 * di associare l`articolo.
+	 * Riceve il nome dell'articolo come stringa, evitando che la CLI debba accedere
+	 * direttamente al model per recuperare l'oggetto.
+	 *
+	 * @param nomeLista    Il nome della lista.
+	 * @param nomeArticolo Il nome dell'articolo da ripristinare.
+	 * @return true se ripristinato, false altrimenti.
+	 */
+
+	public boolean gestisciRipristinoArticoloInLista(String nomeLista, String nomeArticolo) {
+		return gestisciRipristinoArticoloInLista(nomeLista, GestioneListe.getArticolo(nomeArticolo));
+	}
+
+	/**
+	 * Crea un articolo completo e lo inserisce nella lista attuale dell'interfaccia
+	 * grafica. Se la categoria inserita non esiste ancora nel catalogo
+	 * globale,viene creata prima di associare l'articolo.
+	 * 
 	 * 
 	 * @param nomeArticolo  Il nome dell'articolo.
 	 * @param nomeCategoria Il nome della categoria (se non esiste, viene creata).
@@ -648,58 +694,67 @@ public class Controller implements ActionListener {
 	public boolean gestisciInserimentoArticoloCompleto(String nomeArticolo, String nomeCategoria, String nota,
 			double prezzo) {
 
-		try {
-
-			model.Categoria categoria = model.GestioneListe.getCategorie(nomeCategoria);
-
-			if (categoria == null && nomeCategoria != null && !nomeCategoria.trim().isEmpty()) {
-
-				model.GestioneListe.aggiungeCategoria(nomeCategoria);
-
-				categoria = model.GestioneListe.getCategorie(nomeCategoria);
-
-			} else if (nomeCategoria == null || nomeCategoria.trim().isEmpty()) {
-
-				categoria = new model.Categoria("Non categorizzato");
-			}
-
-			boolean aggiuntoInCatalogo = gestisciAggiuntaArticoloCatalogo(nomeArticolo);
-
-			if (aggiuntoInCatalogo) {
-
-				Articolo nuovoArticolo = GestioneListe.getArticolo(nomeArticolo);
-
-				if (nuovoArticolo != null) {
-
-					nuovoArticolo.setCategoria(categoria);
-
-					nuovoArticolo.setNota(nota);
-
-					nuovoArticolo.setPrezzo(prezzo);
-
-					if (this.listaAttuale != null) {
-
-						boolean inseritoInLista = gestisciAggiuntaArticoloLista(this.listaAttuale, nuovoArticolo);
-
-						if (inseritoInLista) {
-
-							aggiornaInterfacciaGrafica(listaAttuale);
-
-							return true;
-						}
-					}
-				}
-
-			}
-
+		if (listaAttuale == null) {
 			return false;
-
-		} catch (IllegalArgumentException e) {
-
-			return false;
-
 		}
 
+		return gestisciInserimentoArticoloCompleto(listaAttuale, nomeArticolo, nomeCategoria, nota, prezzo);
+
+	}
+
+	/**
+	 * Crea un articolo completo e lo inserisce in una lista specificata per nome.
+	 * Usato dalla CLI (che non ha una "lista attuale" implicita). Se la categoria
+	 * non esiste ancora, viene creata automaticamente. Se l'articolo esiste già nel
+	 * catalogo, l'operazione fallisce.
+	 * 
+	 * Usato dalla CLI.
+	 *
+	 * @param nomeLista     Il nome della lista di destinazione.
+	 * @param nomeArticolo  Il nome dell'articolo.
+	 * @param nomeCategoria Il nome della categoria.
+	 * @param nota          La nota opzionale.
+	 * @param prezzo        Il costo dell'articolo.
+	 * @return true se l'operazione ha successo, false altrimenti.
+	 */
+
+	public boolean gestisciInserimentoArticoloCompleto(String nomeLista, String nomeArticolo, String nomeCategoria,
+			String nota, double prezzo) {
+		try {
+			ListaDiArticoli lista = GestioneListe.getLista(nomeLista);
+			if (lista == null) {
+				return false;
+			}
+
+			if (GestioneListe.getArticolo(nomeArticolo) != null) {
+				return false;
+			}
+
+			model.Categoria categoria = GestioneListe.getCategorie(nomeCategoria);
+
+			if (categoria == null && nomeCategoria != null && !nomeCategoria.trim().isEmpty()) {
+				GestioneListe.aggiungeCategoria(nomeCategoria);
+				categoria = GestioneListe.getCategorie(nomeCategoria);
+			}
+
+			if (categoria == null) {
+				categoria = GestioneListe.getCategorie("Non categorizzato");
+				if (categoria == null) {
+					GestioneListe.aggiungeCategoria("Non categorizzato");
+					categoria = GestioneListe.getCategorie("Non categorizzato");
+				}
+			}
+
+			GestioneListe.aggiungeArticolo(nomeArticolo, categoria, nota, prezzo);
+
+			Articolo artInCatalogo = GestioneListe.getArticolo(nomeArticolo);
+			lista.aggiungiArticolo(artInCatalogo);
+
+			return true;
+
+		} catch (IllegalArgumentException e) {
+			return false;
+		}
 	}
 
 	/**
@@ -748,6 +803,21 @@ public class Controller implements ActionListener {
 			return false;
 		}
 
+	}
+
+	/**
+	 * Svuota la lista dei cancellati di una lista specifica.
+	 *
+	 * @param nomeLista Il nome della lista.
+	 * @return true se l'operazione è riuscita, false se la lista non esiste.
+	 */
+	public boolean gestisciSvuotaCancellati(String nomeLista) {
+		ListaDiArticoli lista = GestioneListe.getLista(nomeLista);
+		if (lista == null) {
+			return false;
+		}
+		lista.svuotaCancellati();
+		return true;
 	}
 
 	/**
@@ -804,6 +874,24 @@ public class Controller implements ActionListener {
 		}
 
 	}
+	
+	/**
+	 * Restituisce una stringa
+	 * descrittiva invece dell'oggetto Articolo, evitando che la CLI debba
+	 * importare classi del package model.
+	 *
+	 * @param nomeLista La lista in cui cercare.
+	 * @param prefisso  Il prefisso del nome.
+	 * @return La rappresentazione testuale dell'articolo trovato, o null.
+	 */
+
+	public String gestisciRicercaPerPrefissoStringa(String nomeLista, String prefisso) {
+
+		Articolo trovato = gestisciRicercaPerPrefisso(nomeLista, prefisso);
+
+		return trovato != null ? trovato.toString() : null;
+	}
+
 
 	/**
 	 * 

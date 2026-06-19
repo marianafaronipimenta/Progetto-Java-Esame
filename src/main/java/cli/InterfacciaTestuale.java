@@ -2,8 +2,6 @@ package cli;
 
 import java.util.Scanner;
 import gui.controller.Controller;
-import model.Articolo;
-import model.GestioneListe;
 
 /**
  * 
@@ -35,17 +33,15 @@ public class InterfacciaTestuale {
 
 		this.scanner = new Scanner(System.in);
 
-		avviaMenu();
-
 	}
 
 	/**
 	 * 
-	 * Gestisce il menù da riga di comando.
+	 * Avvia e gestisce il menù da riga di comando.
 	 * 
 	 */
 
-	private void avviaMenu() {
+	public void avviaMenu() {
 
 		boolean inEsecuzione = true;
 
@@ -295,9 +291,8 @@ public class InterfacciaTestuale {
 
 			String nomeArticolo = scanner.nextLine().trim();
 
-			Articolo art = GestioneListe.getArticolo(nomeArticolo);
 
-			if (controller.gestisciRimozioneArticoloDallaLista(nomeLista, art)) {
+			if (controller.gestisciRimozioneArticoloDallaLista(nomeLista, nomeArticolo)) {
 
 				System.out.println("Articolo spostato nella sezione dei cancellati di questa lista!");
 
@@ -354,9 +349,8 @@ public class InterfacciaTestuale {
 
 			String nomeArticolo = scanner.nextLine().trim();
 
-			Articolo art = GestioneListe.getArticolo(nomeArticolo);
 
-			if (controller.gestisciRipristinoArticoloInLista(nomeLista, art)) {
+			if (controller.gestisciRipristinoArticoloInLista(nomeLista, nomeArticolo)) {
 
 				System.out.println("Articolo ripristinato correttamente nella lista attiva!");
 
@@ -403,10 +397,6 @@ public class InterfacciaTestuale {
 
 	private void eseguiRicercaPerPrefisso() {
 
-		boolean successo = false;
-
-		while (!successo) {
-
 			System.out.print("Inserisci il nome della lista in cui cercare: ");
 
 			String nomeLista = scanner.nextLine().trim();
@@ -415,28 +405,25 @@ public class InterfacciaTestuale {
 
 				System.out.println("Errore: lista non trovata. Riprova.");
 
-				continue;
+				return;
 			}
 
 			System.out.print("Inserisci il prefisso da cercare: ");
 
 			String prefisso = scanner.nextLine().trim();
+			
+			String risultato = controller.gestisciRicercaPerPrefissoStringa(nomeLista, prefisso);
 
-			Articolo trovato = controller.gestisciRicercaPerPrefisso(nomeLista, prefisso);
+			if (risultato != null) {
 
-			if (trovato != null) {
-
-				System.out.println("Articolo trovato: " + trovato.toString());
+				System.out.println("Articolo trovato: " + risultato);
 
 			} else {
 
 				System.out.println("Nessun articolo trovato con prefisso \"" + prefisso + "\" ");
 			}
 
-			successo = true;
-
 		}
 
 	}
 
-}

@@ -126,6 +126,18 @@ public class ListaDiArticoli implements Iterable<Articolo> {
 		articoliDaComprare.add(articolo);
 
 	}
+	
+
+	/**
+	 * Svuota definitivamente la lista degli articoli cancellati.
+	 * 
+	 */
+	
+	public void svuotaCancellati() {
+		articoliCancellati.clear();
+	}
+
+
 
 	/**
 	 * Calcola il prezzo totale degli articoli presenti sulla lista attiva.
@@ -151,7 +163,7 @@ public class ListaDiArticoli implements Iterable<Articolo> {
 	 * controllo della classe Articolo. Cerca prima negli attivi e poi nei cancellati.
 	 * 
 	 *@param  prefisso Le lettere iniziali da cercare.
-	 *@return a L`articolo oppure null se non è stato trovato.
+	 *@return a L'articolo oppure null se non è stato trovato.
 	 *@throws IllegalArgumentException Se il prefisso è nullo o vuoto.
 	 * 
 	 */
